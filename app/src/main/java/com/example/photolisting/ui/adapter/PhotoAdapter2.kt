@@ -1,7 +1,5 @@
 package com.example.photolisting.ui.adapter
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +13,14 @@ import com.example.photolisting.databinding.PhotoListLayoutBinding
 import com.example.photolisting.model.PhotoListingResponces
 
 
-class PhotoAdapter(var list:List<PhotoListingResponces>,val mlistener:onItemClickListner) : RecyclerView.Adapter<PhotoViewHolder>() {
+
+class PhotoAdapter2(var list:List<PhotoListingResponces>, val mlistener:onItemClickListner) : RecyclerView.Adapter<PhotoViewHolder>() {
 
     interface onItemClickListner{
-        fun onItemClick(listdata:PhotoListingResponces)
+        fun onItemClick(listdata: PhotoListingResponces)
     }
+
     lateinit var binding: PhotoListLayoutBinding
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         binding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -40,35 +38,30 @@ class PhotoAdapter(var list:List<PhotoListingResponces>,val mlistener:onItemClic
 
         }
     }
-        override fun getItemCount(): Int {
-            if (!list.isNullOrEmpty()) {
-                return list.size
-            } else {
-                return 0
-            }
+    override fun getItemCount(): Int {
+        if (!list.isNullOrEmpty()) {
+            return list.size
+        } else {
+            return 0
         }
-
-
     }
 
 
-    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+}
 
-    fun bind(listDataonPosition:PhotoListingResponces, imageUrl: String, text: String,  onItemClickListner: PhotoAdapter.onItemClickListner) {
-        var imageView:ImageView=itemView.findViewById(R.id.iv_photo_album)
-        var nametext:TextView=itemView.findViewById(R.id.tv_photoAlbumName)
+
+class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    fun bind(listDataonPosition: PhotoListingResponces, imageUrl: String, text: String, onItemClickListner: PhotoAdapter2.onItemClickListner) {
+        var imageView: ImageView =itemView.findViewById(R.id.iv_photo_album)
+        var nametext: TextView =itemView.findViewById(R.id.tv_photoAlbumName)
         nametext.text=text
         Glide.with(itemView.context)
                 .load(imageUrl)
                 .into(imageView)
         itemView.setOnClickListener{
-        onItemClickListner.onItemClick(listDataonPosition)
+            onItemClickListner.onItemClick(listDataonPosition)
 
         }
     }
 }
-
-
-
-
-

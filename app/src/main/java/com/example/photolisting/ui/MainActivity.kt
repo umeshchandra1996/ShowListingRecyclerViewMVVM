@@ -10,18 +10,17 @@ import com.example.photolisting.R
 import com.example.photolisting.databinding.ActivityMainBinding
 import com.example.photolisting.model.PhotoListingResponces
 import com.example.photolisting.repository.PhotoListingRepository
-import com.example.photolisting.ui.adapter.PhotoAdapter
+import com.example.photolisting.ui.adapter.PhotoAdapter2
 import com.example.photolisting.viewModel.PhotoViewModel
 import com.example.photolisting.viewModel.viewModelProvider
 
 
-class MainActivity : AppCompatActivity(), PhotoAdapter.onItemClickListner {
-
-
-    lateinit var adapter:PhotoAdapter
+class MainActivity : AppCompatActivity(), PhotoAdapter2.onItemClickListner {
+    lateinit var adapter:PhotoAdapter2
     lateinit var binding:ActivityMainBinding
     var repository:PhotoListingRepository= PhotoListingRepository()
     var listOfResponse: List<PhotoListingResponces> = listOf()
+    lateinit var gridLayoutManager:GridLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +30,8 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.onItemClickListner {
     }
 
     private fun recyclerViewSetup() {
-        var gridLayoutManager= GridLayoutManager(this,2)
-        adapter= PhotoAdapter(listOfResponse,this)
+         gridLayoutManager= GridLayoutManager(this,2)
+        adapter= PhotoAdapter2(listOfResponse,this)
         binding.rvPhoto.adapter=adapter
         binding.rvPhoto.layoutManager=gridLayoutManager
     }
@@ -41,12 +40,13 @@ class MainActivity : AppCompatActivity(), PhotoAdapter.onItemClickListner {
         val viewModelProviderFactory = viewModelProvider(repository = repository)
         var viewModel = ViewModelProvider(this, viewModelProviderFactory).get(PhotoViewModel::class.java)
          viewModel.liveData.observe(this){
-            listOfResponse=it
+            //listOfResponse=it
+            adapter.list=it
             adapter.notifyDataSetChanged()
         }
     }
 
-    override fun onItemClick(listDataonPosition: PhotoListingResponces) {
+ override  fun onItemClick(listDataonPosition: PhotoListingResponces) {
         var intent=Intent(this,SinglePhotoShow::class.java)
         intent.putExtra("ImageUrl",listDataonPosition.downloadUrl)
         intent.putExtra("NameAuthor",listDataonPosition.author)
