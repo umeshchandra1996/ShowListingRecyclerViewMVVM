@@ -2,6 +2,7 @@ package com.example.photolisting.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter2.onItemClickListner {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding=DataBindingUtil.setContentView(this,R.layout.activity_main)
+        binding.progressCircular.visibility=View.VISIBLE
         viewModelSetup()
         recyclerViewSetup()
     }
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity(), PhotoAdapter2.onItemClickListner {
         var viewModel = ViewModelProvider(this, viewModelProviderFactory).get(PhotoViewModel::class.java)
          viewModel.liveData.observe(this){
             //listOfResponse=it
+            binding.progressCircular.visibility=View.GONE
             adapter.list=it
             adapter.notifyDataSetChanged()
         }
