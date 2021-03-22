@@ -13,60 +13,62 @@ import com.bumptech.glide.Glide
 import com.example.photolisting.R
 import com.example.photolisting.databinding.PhotoListLayoutBinding
 import com.example.photolisting.model.PhotoListingResponces
-import com.example.photolisting.ui.SinglePhotoShow
 
-class PhotoAdapter(context: Context,list:List<PhotoListingResponces>) : RecyclerView.Adapter<PhotoViewHolder>() {
+
+class PhotoAdapter(var list:List<PhotoListingResponces>,val mlistener:onItemClickListner) : RecyclerView.Adapter<PhotoViewHolder>() {
+
+    interface onItemClickListner{
+        fun onItemClick(listdata:PhotoListingResponces)
+    }
     lateinit var binding: PhotoListLayoutBinding
-    var context=context
-    var list=list
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         binding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            R.layout.photo_list_layout, parent, false
+                LayoutInflater.from(parent.context),
+                R.layout.photo_list_layout, parent, false
         )
         return PhotoViewHolder(binding.root)
     }
 
+
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        if(!list.isNullOrEmpty()){
-        var listResponse:PhotoListingResponces=list.get(position)
-
-        holder.itemView.findViewById<TextView>(R.id.tv_photoAlbumName).setText(listResponse.author)
-        Glide.with(context)
-            .load(listResponse.downloadUrl)
-            .into(  holder.itemView.findViewById<ImageView>(R.id.iv_photo_album))
+        if (!list.isNullOrEmpty()) {
+            var listResponse = list.get(position)
+            println("_____${listResponse}")
+            holder.bind(listResponse, listResponse.downloadUrl, listResponse.author, onItemClickListner = mlistener)
 
         }
-        holder.itemView.setOnClickListener{
-            var intent=Intent(context,SinglePhotoShow::class.java)
-            intent.putExtra("data",list)
-            context.startActivity(intent)
+    }
+        override fun getItemCount(): Int {
+            if (!list.isNullOrEmpty()) {
+                return list.size
+            } else {
+                return 0
+            }
         }
 
 
     }
 
-    override fun getItemCount(): Int {
-    if(!list.isNullOrEmpty()){
-        return list.size
-    }else {
-        return 0
-    }
-    }
 
+    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-}
-
-class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    /*fun bind(imageView: String?,text: String?) {
+    fun bind(listDataonPosition:PhotoListingResponces, imageUrl: String, text: String,  onItemClickListner: PhotoAdapter.onItemClickListner) {
         var imageView:ImageView=itemView.findViewById(R.id.iv_photo_album)
-        var text:TextView=itemView.findViewById(R.id.tv_photoAlbumName)
+        var nametext:TextView=itemView.findViewById(R.id.tv_photoAlbumName)
+        nametext.text=text
+        Glide.with(itemView.context)
+                .load(imageUrl)
+                .into(imageView)
+        itemView.setOnClickListener{
+        onItemClickListner.onItemClick(listDataonPosition)
 
-
-
-    }*/
-
-
-
+        }
+    }
 }
+
+
+
+
+
