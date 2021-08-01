@@ -10,14 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.photolisting.R
 import com.example.photolisting.databinding.PhotoListLayoutBinding
-import com.example.photolisting.model.PhotoListingResponces
+import com.example.photolisting.model.PhotoListingDataResponseItem
 
 
 
-class PhotoAdapter2(var list:List<PhotoListingResponces>, val mlistener:onItemClickListner) : RecyclerView.Adapter<PhotoViewHolder>() {
+
+class PhotoAdapter(var list:List<PhotoListingDataResponseItem>, val mlistener:onItemClickListner) : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
     interface onItemClickListner{
-        fun onItemClick(listdata: PhotoListingResponces)
+        fun onItemClick(listdata: PhotoListingDataResponseItem)
     }
 
     lateinit var binding: PhotoListLayoutBinding
@@ -34,7 +35,7 @@ class PhotoAdapter2(var list:List<PhotoListingResponces>, val mlistener:onItemCl
         if (!list.isNullOrEmpty()) {
             var listResponse = list.get(position)
             println("_____${listResponse}")
-            holder.bind(listResponse, listResponse.downloadUrl, listResponse.author, onItemClickListner = mlistener)
+            holder.bind(listResponse, listResponse.download_url, listResponse.author, onItemClickListner = mlistener)
 
         }
     }
@@ -47,21 +48,24 @@ class PhotoAdapter2(var list:List<PhotoListingResponces>, val mlistener:onItemCl
     }
 
 
-}
 
 
-class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(listDataonPosition: PhotoListingResponces, imageUrl: String, text: String, onItemClickListner: PhotoAdapter2.onItemClickListner) {
-        var imageView: ImageView =itemView.findViewById(R.id.iv_photo_album)
-        var nametext: TextView =itemView.findViewById(R.id.tv_photoAlbumName)
-        nametext.text=text
-        Glide.with(itemView.context)
+
+    class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(listDataonPosition: PhotoListingDataResponseItem, imageUrl: String, text: String, onItemClickListner: onItemClickListner) {
+            var imageView: ImageView =itemView.findViewById(R.id.iv_photo_album)
+            var nametext: TextView =itemView.findViewById(R.id.tv_photoAlbumName)
+            nametext.text=text
+            Glide.with(itemView.context)
                 .load(imageUrl)
                 .into(imageView)
-        itemView.setOnClickListener{
-            onItemClickListner.onItemClick(listDataonPosition)
+            itemView.setOnClickListener{
+                onItemClickListner.onItemClick(listDataonPosition)
 
+            }
         }
     }
 }
+
